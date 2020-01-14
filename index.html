@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Photo Spot</title>
+  </head>
+
+  <body>
+    <main role="main" class="container">
+      <div class="starter-template">
+        <h1>Photo Spot</h1>
+        <div id="location-warning"></div>
+        <p class="lead">
+          Find spots near you to take photos.
+        </p>
+        <div id="location-info"></div>
+      </div>
+
+      <div class="card-deck">
+        <div id="cards" class="row row-cols-1 row-cols-md-3">
+          <!--
+          <div class="col mb-4">
+            <div class="card" style="width: 18rem;">
+              <a href="#" class="card-link">
+                <img src="assets/Photo_Repo/GoldenGate/35833135403_cbf3e4d286_o.jpg" class="card-img-top" alt="Golden Gate Bridge">
+              </a>
+              <div class="card-body">
+                <h5 class="card-title">Golden Gate</h5>
+                <h6 class="card-subtitle mb-2 text-muted">.5 Miles Away</h6>
+                <p><a href="#" class="card-link">Directions ↗️</a></p>
+              </div>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+    </main>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- then other dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars-intl@latest/dist/handlebars-intl.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+
+    <script>
+      window.onload=main;
+
+      function main() {
+        HandlebarsIntl.registerWith(Handlebars);
+
+        // Location
+
+        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+          var R = 6371; // Radius of the earth in km
+          var dLat = deg2rad(lat2-lat1);  // deg2rad below
+          var dLon = deg2rad(lon2-lon1);
+          var a =
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon/2) * Math.sin(dLon/2)
+          ;
+          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+          var d = R * c; // Distance in km
+          return d;
+        }
+
+        function deg2rad(deg) {
+          return deg * (Math.PI/180);
+        }
+
+        function locationSuccess(position) {
+          const usersLatitude = position.coords.latitude;
+          const usersLongitude = position.coords.longitude;
+
+          // document.getElementById("location-info").innerHTML = `
+          //   <p>Your location is: {"latitude": ${usersLatitude}, "longitude": ${usersLongitude}}</p>
+          // `;
+
+          var spots = JSON.parse(`
+            [
+              {
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=37.78803833333333,-122.40748666666667",
+                "distanceAway": 0.5,
+                "imgId": "spot-img-0",
+                "imgSrc": "assets/Photo_Repo/UnionSquare/27403649212_ae35df7075_o.jpg",
+                "latitude": 37.78803833333333,
+                "longitude": -122.40748666666667,
+                "neighborhood": "Union Square"
+              },
+              {
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=37.718472222222225,-122.39899444444445",
+                "distanceAway": 0.5,
+                "imgId": "spot-img-1",
+                "imgSrc": "assets/Photo_Repo/FisherMansWharf/39174895815_c099ef1a27_o.jpg",
+                "latitude": 37.718472222222225,
+                "longitude": -122.39899444444445,
+                "neighborhood": "Fisherman's Wharf"
+              },
+              {
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=37.77613888888889,-122.433425",
+                "distanceAway": 0.5,
+                "imgId": "spot-img-2",
+                "imgSrc": "assets/Photo_Repo/PaintedLadies/38952046004_295f53f593_o.jpg",
+                "latitude": 37.77613888888889,
+                "longitude": -122.433425,
+                "neighborhood": "PaintedLadies"
+              },
+              {
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=37.77579444444444,-122.43373055555556",
+                "distanceAway": 0.5,
+                "imgId": "spot-img-3",
+                "imgSrc": "assets/Photo_Repo/PaintedLadies/35912827354_767325661e_o.jpg",
+                "latitude": 37.77579444444444,
+                "longitude": -122.43373055555556,
+                "neighborhood": "PaintedLadies"
+              },
+              {
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=37.80200555555555,-122.41945",
+                "distanceAway": 0.5,
+                "imgId": "spot-img-4",
+                "imgSrc": "assets/Photo_Repo/LombardStreet/16444818579_c2fe6cf1fd_o.jpg",
+                "latitude": 37.80200555555555,
+                "longitude": -122.41945,
+                "neighborhood": "Lombard Street"
+              },
+              {
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=37.802186111111105,-122.41792222222223",
+                "distanceAway": 0.5,
+                "imgId": "spot-img-5",
+                "imgSrc": "assets/Photo_Repo/LombardStreet/36620502185_48976bb7a7_o.jpg",
+                "latitude": 37.802186111111105,
+                "longitude": -122.41792222222223,
+                "neighborhood": "Lombard Street"
+              },
+              {
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=37.809155555555556,-122.4109888888889",
+                "distanceAway": 0.5,
+                "imgId": "spot-img-6",
+                "imgSrc": "assets/Photo_Repo/Pier39/21767330458_37cd9ca040_o.jpg",
+                "latitude": 37.809155555555556,
+                "longitude": -122.4109888888889,
+                "neighborhood": "Pier 39"
+              },
+              {
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=37.8276436,-122.4813285",
+                "distanceAway": 0.5,
+                "imgId": "spot-img-7",
+                "imgSrc": "assets/Photo_Repo/GoldenGate/48030448276_947f8d48ed_o.jpg",
+                "latitude": 37.8276436,
+                "longitude": -122.4813285,
+                "neighborhood": "Golden Gate"
+              },
+              {
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=37.808680555555554,-122.47523611111112",
+                "distanceAway": 0.5,
+                "imgId": "spot-img-8",
+                "imgSrc": "assets/Photo_Repo/GoldenGate/35833135403_cbf3e4d286_o.jpg",
+                "latitude": 37.808680555555554,
+                "longitude": -122.47523611111112,
+                "neighborhood": "Golden Gate"
+              },
+              {
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=37.75498611111111,-122.44660277777778",
+                "distanceAway": 0.5,
+                "imgId": "spot-img-9",
+                "imgSrc": "assets/Photo_Repo/TwinPeaks/35889452874_1c54669e59_o.jpg",
+                "latitude": 37.75498611111111,
+                "longitude": -122.44660277777778,
+                "neighborhood": "Twin Peaks"
+              },
+              {
+                "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=37.75503055555556,-122.44723611111111",
+                "distanceAway": 0.5,
+                "imgId": "spot-img-10",
+                "imgSrc": "assets/Photo_Repo/TwinPeaks/43466911872_b52d817d68_b.jpg",
+                "latitude": 37.75503055555556,
+                "longitude": -122.44723611111111,
+                "neighborhood": "Twin Peaks"
+              }
+            ]
+          `)
+
+          for (const spot of spots) {
+            let img = document.getElementById(spot.imgId);
+
+            let latitude = spot["latitude"];
+            let longitude = spot["longitude"];
+
+            let distanceInKm = getDistanceFromLatLonInKm(latitude, longitude, usersLatitude, usersLongitude);
+            let distance = distanceInKm / 1.6;
+            console.log(`distance: ${distance}`)
+            spot.distanceAway = distance
+          }
+          spots.sort((a, b) => (a.distanceAway > b.distanceAway) ? 1 : -1);
+
+          const photoSpotTemplate = `
+            <div class="col mb-4">
+              <div class="card" style="width: 18rem;">
+                <a href="{{directionsUrl}}" class="card-link">
+                  <img id="{{imgId}}" src="{{imgSrc}}" class="card-img-top" alt="{{neighborhood}}">
+                </a>
+                <div class="card-body">
+                  <h5 class="card-title">{{neighborhood}}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{formatNumber distanceAway}} Miles Away</h6>
+                  <p><a href="{{directionsUrl}}" class="card-link">Directions to photo spot ↗️</a></p>
+                </div>
+              </div>
+            </div>
+          `;
+          const renderPhotoSpotTemplate = Handlebars.compile(photoSpotTemplate)
+          for (const spot of spots) {
+            document.getElementById("cards").innerHTML += renderPhotoSpotTemplate(spot);
+          }
+        }
+
+        function locationError() {
+          document.getElementById("location-warning").innerHTML = `
+            <div class="alert alert-danger" role="alert">
+              Unable to access your location. Enable location to see which photo spots are near you!
+            </div>
+          `;
+        }
+
+        if (!navigator.geolocation) {
+          document.getElementById("location-warning").innerHTML = `
+            <div class="alert alert-danger" role="alert">
+              Enable location to see which photo spots are near you!
+            </div>
+          `;
+        } else {
+          navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
+        }
+      }
+    </script>
+  </body>
+</html>
