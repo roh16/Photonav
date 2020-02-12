@@ -233,14 +233,13 @@
           const photoSpotTemplate = `
             <div class="col mb-4">
               <div class="card" style="width: 18rem;">
-                <a href="{{directionsUrl}}" class="card-link">
+                <a href="{{directionsUrl}}" class="card-link" data-clickimg="{{imgSrc}}" data-clicktype="image_clickthrough">
                   <img id="{{imgId}}" src="{{imgSrc}}" class="card-img-top" alt="{{neighborhood}}">
                 </a>
                 <div class="card-body">
                   <h5 class="card-title">{{neighborhood}}</h5>
                   <h6 class="card-subtitle mb-2 text-muted">{{formatNumber distanceAway}} Miles Away</h6>
-                  <p><a href="{{directionsUrl}}" class="card-link">Directions to photo spot ↗️</a></p>
-                  <p><a href="#" class="card-link" data-img="{{imgSrc}}" data-type="text_link">Directions to this site ↗️</a></p>
+                  <p><a href="{{directionsUrl}}" class="card-link" data-clickimg="{{imgSrc}}" data-clicktype="text_clickthrough">Directions to photo spot ↗️</a></p>
                 </div>
               </div>
             </div>
