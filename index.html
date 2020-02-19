@@ -40,10 +40,28 @@
     <!-- End Google Tag Manager (noscript) -->
 
     <main role="main" class="container">
+      <div id="top">
+        <div id="topCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner col-md-12 col-lg-12 col-sm-12" style="max-height:200px">
+            <div class="carousel-item active" width="100%" max-height="10%">
+              <img class="carousel-img" style="width:100%;height:100%" src="assets/Photo_Repo/Pier39/21767330458_37cd9ca040_o.jpg">
+            </div>
+            <div class="carousel-item" width="100%" max-height="10%">
+                <img class="carousel-img" style="width:100%;height:100%" src="assets/Photo_Repo/GoldenGate/48030448276_947f8d48ed_o.jpg">
+            </div>
+            <div class="carousel-item" width="100%" max-height="10%">
+                <img class="carousel-img" style="width:100%;height:100%" src="assets/Photo_Repo/FisherMansWharf/39174895815_c099ef1a27_o.jpg">
+            </div>
+            <div class="carousel-item" width="100%" max-height="10%">
+                <img class="carousel-img" style="width:100%;height:100%" src="assets/Photo_Repo/PaintedLadies/38952046004_295f53f593_o.jpg">
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="starter-template">
-        <h1>Photonav</h1>
+        <h1 style="text-align:center;font-family:fantasy;font-size:40px;color:lightblue">Photonav</h1>
         <div id="location-warning"></div>
-        <p class="lead">
+        <p class="lead" style="text-align:center;font-family:fantasy;font-size:20px;color:lime">
           Find the exact GPS coordinates where your favorite photos are taken.
         </p>
         <div id="location-info"></div>
@@ -232,14 +250,22 @@
 
           const photoSpotTemplate = `
             <div class="col mb-4">
-              <div class="card" style="width: 18rem;">
-                <a href="{{directionsUrl}}" class="card-link" data-clickimg="{{imgSrc}}" data-clicktype="image_clickthrough">
-                  <img id="{{imgId}}" src="{{imgSrc}}" class="card-img-top" alt="{{neighborhood}}">
-                </a>
-                <div class="card-body">
-                  <h5 class="card-title">{{neighborhood}}</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">{{formatNumber distanceAway}} Miles Away</h6>
-                  <p><a href="{{directionsUrl}}" class="card-link" data-clickimg="{{imgSrc}}" data-clicktype="text_clickthrough">Directions to photo spot ↗️</a></p>
+              <div class="card h-100 border-white">
+                <div class="card" style="width: 18rem;">
+                  <a href="{{directionsUrl}}" class="card-link" data-clickimg="{{imgSrc}}" data-clicktype="image_clickthrough">
+                      <div id="topCarousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner col-md-12 col-lg-12 col-sm-12" style="max-height:200px">
+                          <div class="carousel-item active" width="100%" max-height="10%">
+                            <img id={{imgId}} class="carousel-img" src={{imgSrc}} style="width:100%;height=100%">
+                          </div>
+                        </div>
+                      </div>
+                  </a>
+                  <div class="card-body">
+                    <h5 class="card-title">{{neighborhood}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{formatNumber distanceAway}} Miles Away</h6>
+                    <p><a href="{{directionsUrl}}" class="card-link" data-clickimg="{{imgSrc}}" data-clicktype="text_clickthrough">Directions to photo spot ↗️</a></p>
+                  </div>
                 </div>
               </div>
             </div>
